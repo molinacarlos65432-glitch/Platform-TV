@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link href="https://site-assets.fontawesome.com/releases/v6.7.1/css/all.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Streaming sin anuncios - StreamWish, Filemoon, Vidhide, VOE">
+    <title>XGEO - Multi-Servidor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/css">
+        * {user-select: auto !important; -webkit-user-select: auto !important;}
+    </style>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box;}
+        html, body {width:100%; overflow-x:hidden;}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+            min-height: 100vh; color:#ffffff;
+        }
+        .container-main {width:100%; max-width:100%; margin:0 auto; padding:1rem;}
+        @media (min-width:640px) {.container-main{padding:1.5rem;}}
+        @media (min-width:1024px) {.container-main{max-width:1400px; padding:2rem 1rem;}}
+        .header{display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; width:100%;}
+        .logo{font-size:1.25rem; font-weight:800; background: linear-gradient(135deg, #1e86fd, #00a8ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:flex; align-items:center; gap:0.5rem;}
+        @media (min-width:640px){.logo{font-size:1.5rem;}}
+        .content-wrapper{width:100%; display:flex; flex-direction:column; gap:1.5rem;}
+        @media (min-width:1024px){.content-wrapper{flex-direction:row; gap:2rem;}}
+        .main-player{width:100%; flex:1; min-width:0;}
+        .player-section{background: rgba(30, 41, 59, 0.3); backdrop-filter: blur(10px); border:1px solid rgba(30,134,253,0.2); border-radius:16px; padding:1rem; overflow:hidden; transition:all 0.3s ease; width:100%;}
+        @media (min-width:640px){.player-section{padding:1.5rem;}}
+        .player-section:hover{border-color: rgba(30,134,253,0.4); box-shadow:0 0 30px rgba(30,134,253,0.15);}
+        .iframe-container{position:relative; width:100%; padding-top:56.25%; background:#000000; border-radius:12px; overflow:hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);}
+        .iframe-container iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:none;}
+        .controls-section{background: rgba(15,23,42,0.3); backdrop-filter: blur(10px); border:1px solid rgba(30,134,253,0.2); border-radius:12px; padding:1rem; margin-top:1.5rem; width:100%;}
+        @media (min-width:640px){.controls-section{padding:1.5rem;}}
+        .control-row{display:flex; flex-direction:column; gap:1rem; margin-bottom:1rem; width:100%;}
+        @media (min-width:640px){.control-row{flex-direction:row; gap:1rem;}}
+        .control-item{flex:1; min-width:0;}
+        .input-label{display:block; font-size:0.8rem; font-weight:600; color:#fff; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.05em;}
+        .input-field, .select-field{
+            width:100%; padding:0.75rem 1rem; background: rgba(0,0,0,0.4); border:1px solid rgba(30,134,253,0.3); border-radius:8px; color:#fff; font-size:0.95rem; transition:all 0.3s ease;
+        }
+        .input-field:focus, .select-field:focus{
+            outline:none; border-color:#1e86fd; box-shadow:0 0 0 3px rgba(30,134,253,0.2); background: rgba(0,0,0,0.6);
+        }
+        .input-field::placeholder{color:#64748b;}
+        .select-field{cursor:pointer;}
+        .btn{padding:0.75rem 1rem; border-radius:8px; font-weight:600; font-size:0.9rem; cursor:pointer; transition:all 0.3s ease; border:none; text-transform:uppercase; letter-spacing:0.05em; display:inline-flex; align-items:center; justify-content:left; gap:0.5rem; white-space:nowrap;}
+        .btn-primary{background: linear-gradient(135deg, #1e86fd, #00a8ff); color:white; box-shadow:0 4px 15px rgba(30,134,253,0.3); width:100%;}
+        .btn-primary:hover{transform:translateY(-2px); box-shadow:0 6px 20px rgba(30,134,253,0.5);}
+        .btn-primary:active{transform:translateY(0);}
+        .button-group{display:flex; flex-direction:column; gap:0.75rem; width:100%;}
+        .sidebar{width:100%; display:flex; flex-direction:column; gap:1rem;}
+        @media (min-width:1024px){.sidebar{width:320px; flex-shrink:0;}}
+        .info-card{background: rgba(30,41,59,0.3); backdrop-filter: blur(10px); border:1px solid rgba(30,134,253,0.2); border-radius:12px; padding:1rem; transition:all 0.3s ease; width:100%;}
+        @media (min-width:640px){.info-card{padding:1.5rem;}}
+        .info-card:hover{border-color: rgba(30,134,253,0.4);}
+        .info-card h3{font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em;}
+        .feature-list{list-style:none;}
+        .feature-list li{padding:0.5rem 0; font-size:0.9rem; color:#fff; display:flex; align-items:center; gap:0.75rem;}
+        .feature-list li:before{content:"✓"; color:#00ff3b; font-weight:bold; font-size:1rem;}
+        .message{padding:1rem; border-radius:8px; margin-top:1rem; display:none; font-size:0.9rem; animation:slideIn 0.3s ease; width:100%;}
+        .message.show{display:block;}
+        @keyframes slideIn{from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);}}
+        .message.error{background: rgba(214,0,67,0.1); border:1px solid rgba(214,0,67,0.3); color:#ff6b9d;}
+        .message.success{background: rgba(0,255,59,0.1); border:1px solid rgba(0,255,59,0.3); color:#00ff3b;}
+        .code-section{background: rgba(0,0,0,0.4); border:1px solid rgba(30,134,253,0.2); border-radius:8px; padding:1rem; margin-top:1rem; display:block; width:100%; overflow:hidden;}
+        .code-section pre{background: rgba(0,0,0,0.6); padding:0.75rem; border-radius:6px; overflow-x:auto; font-size:0.75rem; color:#fff; line-height:1.4; margin:0;}
+        .copy-btn{background: linear-gradient(135deg, #1e86fd, #00a8ff); color:white; padding:0.6rem 1rem; border-radius:6px; border:none; cursor:pointer; font-size:0.85rem; transition:all 0.3s ease; margin-top:0.75rem; width:100%; font-weight:600;}
+        .copy-btn:hover{transform:translateY(-2px); box-shadow:0 4px 12px rgba(30,134,253,0.3);}
+        .footer{text-align:center; color:#64748b; font-size:0.8rem; margin-top:2rem; padding-top:1.5rem; border-top:1px solid rgba(30,134,253,0.2); width:100%;}
+    </style>
+</head>
+<body>
+    <div class="container-main">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                XGEO Script (NO-ADS)
+            </div>
+            <div style="font-size: 0.8rem; color: #1e86fd;">Multi-Servidor • Sin Anuncios</div>
+        </div>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Main Player -->
+            <div class="main-player">
+                <div class="player-section">
+                    <div class="iframe-container">
+                        <iframe id="inlineFrameExample" title="Reproductor de Video Sin Anuncios" src="https://player.blogdepelis.lat/streamwish.php?url=https%3A%2F%2Fhaxloppd.com%2Fipzsnp8gpeae" allowfullscreen=""></iframe>
+                    </div>
+
+                    <!-- Controls Section -->
+                    <div class="controls-section">
+                        <div class="control-row">
+                            <div class="control-item">
+                                <label for="serverSelect" class="input-label">Servidor</label>
+                                <select id="serverSelect" class="select-field">
+                                    <option value="streamwish.php" selected="">StreamWish</option>
+                                    <option value="filemoon.php">Filemoon</option>
+                                    <option value="vidhide.php">Vidhide</option>
+                                    <option value="voe.php">VOE (𝐢𝐧𝐚𝐜𝐭𝐢𝐯𝐨)</option>
+                                </select>
+                            </div>
+                            <div class="control-item">
+                                <label for="videoUrl" class="input-label">URL del Video</label>
+                                <input type="url" id="videoUrl" class="input-field" placeholder="https://ejemplo.com/video123" value="https://haxloppd.com/ipzsnp8gpeae">
+                            </div>
+                        </div>
+
+                        <button id="generateIframe" class="btn btn-primary">
+                            ▶ Cargar Video
+                        </button>
+
+                        <div id="errorMessage" class="message error"></div>
+                        <div id="successMessage" class="message success">✓ Video cargado correctamente</div>
+                    </div>
+
+                    <!-- Code Section -->
+                    <div id="codeSection" class="code-section show">
+                        <div class="input-label">📋 Código del Iframe</div>
+                        <pre id="iframeCodeText"><iframe id="inlineFrameExample" title="Reproductor de Video Sin Anuncios" width="800" height="450" src="https://player.blogdepelis.lat/streamwish.php?url=https%3A%2F%2Fhaxloppd.com%2Fipzsnp8gpeae" allowfullscreen></iframe></pre>
+                        <button class="copy-btn" onclick="copyToClipboard()">Copiar Código</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Features Card -->
+                <div class="info-card">
+                    <h3><i class="fad fa-cog"></i> Características</h3>
+                    <ul class="feature-list">
+                        <li>Sin anuncios</li>
+                        <li>Carga rápida</li>
+                        <li>HD/Full HD</li>
+                        <li>Multi-servidor</li>
+                        <li>24/7 Online</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2025 XGEO (NO-ADS) | Reproducción de contenido | #Streaming #SinAnuncios</p>
+            <p style="margin-top:0.75rem; font-size:0.75rem; color:#1e86fd;">Amor por jean Carlos</p>
+        </footer>
+    </div>
+
+    <script>
+        const iframe = document.getElementById('inlineFrameExample');
+        const serverSelect = document.getElementById('serverSelect');
+        const videoUrlInput = document.getElementById('videoUrl');
+        const generateIframeButton = document.getElementById('generateIframe');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const codeSection = document.getElementById('codeSection');
+        const iframeCodeText = document.getElementById('iframeCodeText');
+        const token = 'tu_clave_secreta_2025';
+
+        function showMessage(element, text, duration = 3000) {
+            element.textContent = text;
+            element.classList.add('show');
+            setTimeout(() => element.classList.remove('show'), duration);
+        }
+
+        function generateUrls(server, videoUrl) {
+            const iframeSrc = `https://player.blogdepelis.lat/${server}?url=${encodeURIComponent(videoUrl)}`;
+            return { iframeSrc };
+        }
+
+        function updatePlayer(server, videoUrl) {
+            if (!videoUrl || !/^https?:\/\//.test(videoUrl)) {
+                showMessage(errorMessage, '✗ Ingresa una URL válida (https://...)');
+                return;
+            }
+            const { iframeSrc } = generateUrls(server, videoUrl);
+            iframe.src = iframeSrc;
+            const iframeHtml = `<iframe id="inlineFrameExample" title="Reproductor de Video Sin Anuncios" width="800" height="450" src="${iframeSrc}" allowfullscreen></iframe>`;
+            iframeCodeText.textContent = iframeHtml;
+            codeSection.classList.add('show');
+            errorMessage.classList.remove('show');
+            showMessage(successMessage, '✓ Video cargado correctamente');
+        }
+
+        function copyToClipboard() {
+            const code = iframeCodeText.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showMessage(successMessage, '✓ Código copiado al portapapeles');
+            });
+        }
+
+        generateIframeButton.addEventListener('click', () => {
+            updatePlayer(serverSelect.value, videoUrlInput.value.trim());
+        });
+
+        updatePlayer(serverSelect.value, videoUrlInput.value);
+    </script>
+
+</body>
+</html>
